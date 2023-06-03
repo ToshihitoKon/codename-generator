@@ -1,18 +1,20 @@
 package main
 
 import (
-	"crypto/sha256"
-	"encoding/binary"
 	"fmt"
 	"io"
 	"log"
-	"math/rand"
 	"os"
 	"strings"
+
+	"github.com/ToshihitoKon/codename-generator/utils"
+	v1 "github.com/ToshihitoKon/codename-generator/v1"
 )
 
 func main() {
 	var text string
+	var generator utils.CodenameGenerator
+
 	if 1 < len(os.Args) {
 		text = os.Args[1]
 	} else {
@@ -26,13 +28,14 @@ func main() {
 		text = strings.TrimSuffix(text, "\n")
 	}
 
-	textHashBytes := sha256.Sum256([]byte(text))
-	randSourceInt64, readBytes := binary.Varint(textHashBytes[:])
-	if readBytes < 0 {
-		log.Printf("error: overflow")
+	// Generator version
+	generator = v1.New()
+
+	codename, err := generator.GenerateCodename(text)
+	if err != nil {
+		fmt.Printf("error: %s", err)
 		os.Exit(1)
 	}
 
-	r := rand.New(rand.NewSource(randSourceInt64))
-	fmt.Printf("%s %s", adjectives[r.Intn(len(adjectives))], sweets[r.Intn(len(sweets))])
+	fmt.Printf(codename)
 }
