@@ -137,13 +137,13 @@ func init() {
 	Names = append(Names, instruments...)
 }
 
-type V1Generator struct{}
+type Generator struct{}
 
 func New() utils.CodenameGenerator {
-	return &V1Generator{}
+	return &Generator{}
 }
 
-func (v *V1Generator) GenerateCodename(text string) (string, error) {
+func (_ *Generator) GenerateCodename(text string) (string, error) {
 	textHashBytes := sha256.Sum256([]byte(text))
 	randSourceInt64, readBytes := binary.Varint(textHashBytes[:])
 	if readBytes < 0 {
