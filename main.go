@@ -31,8 +31,14 @@ func main() {
 
 	var optGeneratorVersion *int = flag.IntP("generator-version", "g", -1, "Generator Version")
 	var optList *bool = flag.BoolP("list", "l", false, "List generator versions")
+	var optHelp *bool = flag.BoolP("help", "h", false, "show help")
 
 	flag.Parse()
+
+	if *optHelp {
+		flag.Usage()
+		os.Exit(0)
+	}
 
 	if *optList {
 		printAvailableVersions()
